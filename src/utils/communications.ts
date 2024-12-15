@@ -21,7 +21,7 @@ export const sendSmsToSoldiers = async (
       throw new Error("Soldier by name was not found");
     }
     try {
-      const link = `${baseUrl}/${eventId}/${soldier.personalNumber}`;
+      const link = `${baseUrl}?eventId=${eventId}&personalNumber=${soldier.personalNumber}`;
       const message = `Hello ${soldierName},\nA nachsal event has been created. Please report your location urgently using the following link:\n${link}`;
 
       console.log(
