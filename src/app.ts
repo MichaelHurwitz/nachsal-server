@@ -18,7 +18,7 @@ const server = http.createServer(app);
 connectDB();
 
 app.use(cors({
-  origin: `*`, 
+  origin: `${client}`, 
   credentials: true 
 }));app.use(express.json());
 app.use("/api", officerRouter, soldierRoutes, eventRoutes);
