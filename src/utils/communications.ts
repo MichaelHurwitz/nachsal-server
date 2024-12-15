@@ -4,16 +4,15 @@ import { getSoldierByName } from "./helperFuncs";
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID!;
 const authToken = process.env.TWILIO_AUTH_TOKEN!;
-const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER!;
-
+const twilioWhatsAppNumber = `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`; // המספר של Twilio WhatsApp
 const client = twilio(accountSid, authToken);
-const client_api = process.env.CLIENT_APP;
+const clientApi = process.env.CLIENT_APP;
 
-export const sendSmsToSoldiers = async (
+export const sendWhatsAppToSoldiers = async (
   soldiers: ISoldierLocation[],
   eventId: string
 ): Promise<void> => {
-  const baseUrl = `${client_api}`; 
+  const baseUrl = `${clientApi}`;
 
   for (const sol of soldiers) {
     const soldierName = sol.soldierName;
@@ -21,24 +20,27 @@ export const sendSmsToSoldiers = async (
     if (!soldier) {
       throw new Error("Soldier by name was not found");
     }
+
     try {
       const link = `${baseUrl}/Soldier/location/${eventId}/${soldier.personalNumber}`;
-      const message = `Hello ${soldierName},\nA nachsal event has been created. Please report your location urgently using the following link:\n${link}`;
+      const message = `שלום ${soldierName},\nנוצר אירוע מל"ח. אנא דווח על מיקומך בהקדם באמצעות הקישור הבא:\n${link}`;
 
       console.log(
-        `Sending SMS to ${soldierName}, p.n: ${soldier.personalNumber}...`
+        `Sending WhatsApp to ${soldierName}, p.n: ${soldier.personalNumber}...`
       );
 
       await client.messages.create({
         body: message,
-        from: twilioPhoneNumber,
-        to: soldier.phone, // הטלפון של החייל
+        from: twilioWhatsAppNumber, // מספר הוואטסאפ של Twilio
+        to: `whatsapp:${soldier.phone}`, // מספר הוואטסאפ של החייל
       });
 
-      console.log(`SMS sent to ${soldierName}, p.n: ${soldier.personalNumber}`);
+      console.log(
+        `WhatsApp sent to ${soldierName}, p.n: ${soldier.personalNumber}`
+      );
     } catch (error) {
       console.error(
-        `Failed to send SMS to ${soldierName}, p.n: ${soldier.personalNumber}:`,
+        `Failed to send WhatsApp to ${soldierName}, p.n: ${soldier.personalNumber}:`,
         error
       );
     }
