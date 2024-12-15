@@ -13,7 +13,7 @@ export const sendSmsToSoldiers = async (
   soldiers: ISoldierLocation[],
   eventId: string
 ): Promise<void> => {
-  const baseUrl = `http://localhost:5173`; 
+  const baseUrl = `${client_api}`; 
 
   for (const sol of soldiers) {
     const soldierName = sol.soldierName;
