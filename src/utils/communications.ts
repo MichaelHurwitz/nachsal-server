@@ -7,12 +7,13 @@ const authToken = process.env.TWILIO_AUTH_TOKEN!;
 const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER!;
 
 const client = twilio(accountSid, authToken);
+const client_api = process.env.CLIENT_APP;
 
 export const sendSmsToSoldiers = async (
   soldiers: ISoldierLocation[],
   eventId: string
 ): Promise<void> => {
-  const baseUrl = `${client}/Soldier`; 
+  const baseUrl = `${client_api}/Soldier`; 
 
   for (const sol of soldiers) {
     const soldierName = sol.soldierName;
@@ -21,7 +22,7 @@ export const sendSmsToSoldiers = async (
       throw new Error("Soldier by name was not found");
     }
     try {
-      const link = `${baseUrl}?eventId=${eventId}&personalNumber=${soldier.personalNumber}`;
+      const link = `${baseUrl}/${eventId}/${soldier.personalNumber}`;
       const message = `Hello ${soldierName},\nA nachsal event has been created. Please report your location urgently using the following link:\n${link}`;
 
       console.log(
